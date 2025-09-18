@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// Headers principais da biblioteca Kyber
 #include "lib/kyber-zkpop/params.h"
 #include "lib/kyber-zkpop/zkpop.h"
 
@@ -56,7 +55,7 @@ size_t read_from_file(const char* filename, uint8_t** data) {
 
 
 int main(void) {
-    // --- PASSO 1: Alocar memória e carregar artefatos dos arquivos ---
+    // Alocaa memória e carrega artefatos dos arquivos ---
     uint8_t pk[KYBER_PUBLICKEYBYTES];
     uint8_t* zkpop_proof = NULL;
     size_t zkpop_proof_size = 0;
@@ -89,18 +88,15 @@ int main(void) {
         return 1;
     }
 
-    // --- PASSO 2: Chamar a função de verificação ---
     printf("\nExecutando verificação...\n");
     int result = crypto_nizkpop_verify(pk, zkpop_proof, zkpop_proof_size);
 
-    // --- PASSO 3: Interpretar o resultado ---
     if (result == 0) {
-        printf("\n✅ SUCESSO: A prova é VÁLIDA!\n");
+        printf("\nSUCESSO: A prova é VÁLIDA!\n");
     } else {
-        printf("\n❌ FALHA: A prova é INVÁLIDA! (Código de erro: %d)\n", result);
+        printf("\nFALHA: A prova é INVÁLIDA! (Código de erro: %d)\n", result);
     }
 
-    // --- PASSO 4: Liberar a memória alocada para a prova ---
     if (zkpop_proof != NULL) {
         free(zkpop_proof);
         printf("\nMemória da prova foi liberada.\n");

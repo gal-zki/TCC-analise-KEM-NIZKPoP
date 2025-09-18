@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// Headers principais da biblioteca Kyber
 #include "lib/kyber-zkpop/api.h"
 #include "lib/kyber-zkpop/params.h"
 #include "lib/kyber-zkpop/zkpop.h"
@@ -44,10 +43,7 @@ int save_to_file(const char* filename, const uint8_t* data, size_t len) {
 
 
 int main(void) {
-    // --- PASSO 1: Alocar memória para as saídas ---
-    // Buffer para a chave pública
     uint8_t pk[KYBER_PUBLICKEYBYTES];
-    // Buffer para a chave secreta
     uint8_t sk[KYBER_SECRETKEYBYTES];
 
     // A prova (zkpop) será alocada dinamicamente pela função.
@@ -60,12 +56,12 @@ int main(void) {
     printf("Parâmetros: Kyber%d\n", KYBER_K * 256);
     printf("====================================================\n\n");
 
-    // --- PASSO 2: Chamar a função principal para gerar os artefatos ---
+    // Função principal para gerar os artefatos ---
     int result = crypto_kem_keypair_nizkpop(pk, sk, &zkpop_proof, &zkpop_proof_size);
 
-    // --- PASSO 3: Verificar o resultado e usar os artefatos ---
+    // Verificar o resultado e usar os artefatos ---
     if (result == 0 && zkpop_proof != NULL) {
-        printf("✅ Geração concluída com sucesso!\n\n");
+        printf("Geração concluída com sucesso!\n\n");
         printf("Tamanhos dos artefatos gerados:\n");
         printf("   - Chave Pública (pk): %d bytes\n", KYBER_PUBLICKEYBYTES);
         printf("   - Chave Secreta (sk): %d bytes\n", KYBER_SECRETKEYBYTES);
@@ -78,16 +74,15 @@ int main(void) {
         printf("\nArquivos salvos com sucesso.\n");
 
     } else {
-        fprintf(stderr, "❌ ERRO durante a geração da prova. Código de erro: %d\n", result);
-        // Se a prova foi alocada mesmo com erro, tente liberar
+        fprintf(stderr, "ERRO durante a geração da prova. Código de erro: %d\n", result);
+        // Se a prova foi alocada mesmo com erro, tenta liberar
         if (zkpop_proof != NULL) {
             free(zkpop_proof);
         }
-        return 1; // Retorna um código de erro
+        return 1; 
     }
 
-    // --- PASSO 4: Liberar a memória que foi alocada para a prova ---
-    // Este passo é crucial para evitar vazamentos de memória.
+    // Liberaa a memória que foi alocada para a prova ---
     if (zkpop_proof != NULL) {
         free(zkpop_proof);
         printf("\nMemória da prova foi liberada.\n");

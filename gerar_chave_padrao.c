@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-// Headers da biblioteca Kyber
 #include "lib/kyber-zkpop/kem.h"
 #include "lib/kyber-zkpop/params.h"
 
